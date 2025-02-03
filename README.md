@@ -35,6 +35,7 @@ To make the app launch automatically at startup, follow these steps:
 3. Go to the **Login Items** tab.
 4. Click the **+** button and add the app to the list.
 5. Optionally, check the box to hide the app on startup.
+![Autostart Application](https://i.ibb.co/4wXr9Wg1/Autostart-Apps-README.png)
 
 ### 3. **Configure Your Preferred Browser**
 You can configure your preferred browser by:
@@ -47,14 +48,15 @@ You can configure your preferred browser by:
 ### Supported macOS Versions:
 - Available for **macOS El Capitan (10.11)** and above.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
-If you'd like to contribute to this project, feel free to fork the repository, create a branch, and submit a pull request. Contributions are always welcome!
+Follow these steps to create your own version for a custom website
+https://macosx-toolbarapp.netlify.app/
 
----
+## License
 
-Feel free to modify or expand the README as you see fit for your GitHub project!
+This project is licensed under the MIT License.
+
+
+
