@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toolbar One-Click App Guide</title>
+    <link rel="image icon" type="png" href="https://i.ibb.co/xSSwJT5r/logo-apple-4096-removebg-preview.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h1,
+        h2 {
+            color: #222;
+        }
+
+        code {
+            background: #f4f4f4;
+            color: #335cd6;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        pre {
+            background: #1e1e1e;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            /* background: white; */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Toolbar One-Click App Guide</h1>
+        <p>Follow these steps to create a simple macOS toolbar app that opens a specific website when clicked.</p>
+
+        <h2>1. Create a New macOS Project in Xcode</h2>
+        <ul>
+            <li>Open Xcode.</li>
+            <li>Create a new macOS project.</li>
+            <li>Go to <code>Target > Your App Name > Info</code> and add a new key to create Info.plist</li>
+            <pre>Application is agent (UIElement): YES </pre>
+            <div>This is important step so your app runs as a ToolBar app in the background</div>
+        </ul>
+
+        <h2>2. Set Up Assets</h2>
+        <ul>
+            <li>In <code>Main.storyboard</code>, delete the **"Window Controller Scene"** and **"View Controller
+                Scene"** to avoid a
+                blank window on launch.</li>
+            <li>Add an application icon to <code>Assets</code></li>
+            <li>Use <a href="https://github.com/ProjectIGIRemakeTeam/IconSetCreator/releases/tag/macosx"
+                    target="_blank">Icon Set Creator</a> to create an MacOSX AppIcon
+                assets</li>
+        </ul>
+
+        <h2>3. Add the Following Code to <code>AppDelegate.swift</code></h2>
+        <pre><code>
+import Cocoa
+
+@main
+class AppDelegate: NSObject, NSApplicationDelegate {
+    //the website you want to open
+    var urlToOpen: String = "https://github.com"
+
+    //the website logo(need to add the image into Asset with the same name(iconName)!)
+    var iconName: String = "github"
+
+    /////////////////////////////
+    var statusItem: NSStatusItem?
+    var selectedBrowser: String? {
+        get {
+            return UserDefaults.standard.string(forKey: "selectedBrowser")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "selectedBrowser")
+        }
+    }
+
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
+        // Create menu bar icon
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        if let button = statusItem?.button {
+            if let image = NSImage(named: iconName) {
+                button.image = image
+                button.image?.size = NSSize(width: 18, height: 18) // Resize if needed
+            }
+            // Set action for both left and right mouse clicks
+            button.action = #selector(handleClick)
+            button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        }
+    }
+
+    @objc func handleClick() {
+        if let event = NSApp.currentEvent {
+            if event.type == .rightMouseUp {
+                // Handle right-click: show context menu
+                showContextMenu()
+            } else {
+                // Handle left-click: open ChatGPT in selected browser or default browser
+                openDiscord()
+            }
+        }
+    }
+
+    func showContextMenu() {
+        let menu = NSMenu()
+
+        // Add browser options
+        let browsers = ["Safari", "Chrome", "Firefox"]
+        for browser in browsers {
+            let menuItem = NSMenuItem(title: browser, action: #selector(selectBrowser(_:)), keyEquivalent: "")
+            menuItem.target = self
+            menu.addItem(menuItem)
+        }
+
+        // Add a separator
+        menu.addItem(NSMenuItem.separator())
+
+        // Add the default option
+        let defaultItem = NSMenuItem(title: "Default Browser", action: #selector(selectDefaultBrowser), keyEquivalent: "")
+        defaultItem.target = self
+        menu.addItem(defaultItem)
+
+        // Add quit option
+        menu.addItem(NSMenuItem(title: "Quit", action: #selector(quitApp), keyEquivalent: "q"))
+
+        // Set the menu
+        statusItem?.menu = menu
+        statusItem?.button?.performClick(nil)
+        statusItem?.menu = nil // Clear the menu to prevent it from staying attached
+    }
+
+    @objc func selectBrowser(_ sender: NSMenuItem) {
+        // Save the selected browser
+        selectedBrowser = sender.title
+        openDiscord()
+    }
+
+    @objc func selectDefaultBrowser() {
+        // Remove the selected browser setting
+        selectedBrowser = nil
+        openDiscord()
+    }
+
+    func openDiscord() {
+        let url = URL(string: urlToOpen)!
+        if let browser = selectedBrowser {
+            openChatGPTInBrowser(named: browser)
+        } else {
+            // Fallback to default browser
+            NSWorkspace.shared.open(url)
+        }
+    }
+
+    func openChatGPTInBrowser(named browserName: String) {
+        // Define the URL
+        let url = URL(string: urlToOpen)!
+        // Define the paths to the browsers
+        let browserPaths = [
+            "Safari": "/Applications/Safari.app",
+            "Chrome": "/Applications/Google Chrome.app",
+            "Firefox": "/Applications/Firefox.app"
+        ]
+
+        if let browserPath = browserPaths[browserName] {
+            let config = NSWorkspace.OpenConfiguration()
+            NSWorkspace.shared.open([url], withApplicationAt: URL(fileURLWithPath: browserPath), configuration: config, completionHandler: nil)
+        } else {
+            // Fallback to default browser
+            NSWorkspace.shared.open(url)
+        }
+    }
+
+    @objc func quitApp() {
+        NSApplication.shared.terminate(self)
+    }
+}
+</code></pre>
+
+        <h2>4. Build and Archive</h2>
+        <ul>
+            <li>Go to <code>Product > Archive</code></li>
+            <li>Select <code>Copy App</code> to export(Method of Distribution)</li>
+            <li>Copy the application to your preferred location.</li>
+            <li>Run the app on MacOSX</li>
+            <div>Left Click> Open website in browser</div>
+            <div>Right Click> Select browser to open</div>
+        </ul>
+
+        <h2>5. Set the App to Start on Login</h2>
+        <ol>
+            <li>Open <strong>System Preferences</strong> > <strong>Users & Groups</strong>.</li>
+            <li>Select your user account.</li>
+            <li>Go to the <strong>Login Items</strong> tab.</li>
+            <li>Click <strong>+</strong> and add your app.</li>
+            <li>Check the box to hide it on startup (optional).</li>
+        </ol>
+
+        <h2>That's It!</h2>
+        <p>Your macOS toolbar app is now ready to use. Click the icon to open your selected website in the preferred
+            browser.</p>
+    </div>
+</body>
+
+</html>
