@@ -17,9 +17,9 @@ This macOS toolbar application collection allows users to open various platforms
 - **YouTube Studio** ([studio.youtube.com](https://studio.youtube.com))
 
 ## Features:
+- **One-Click Access**: Left-click the toolbar icon to open the website in the chosen browser. Right-click to choose a browser.
 - **Toolbar Integration**: Each app resides in the macOS status bar, offering quick access to the corresponding website via a customizable icon.
 - **Multiple Browser Support**: Open the selected website in your preferred browser (Safari, Chrome, Firefox, etc.).
-- **One-Click Access**: Left-click the status bar icon to open the website in the chosen browser. Right-click to choose a browser.
 - **Automatic Startup**: Set the app to launch automatically on login and run quietly in the background.
 - **Quit Option**: Easily close the app through the context menu.
 
