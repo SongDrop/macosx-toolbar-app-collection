@@ -1,0 +1,1 @@
+# macosx-toolbar-app-collection
