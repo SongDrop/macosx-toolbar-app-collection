@@ -5,11 +5,11 @@
 This macOS toolbar application allows users to open a specific website in their preferred web browser directly from the macOS status bar. It provides a streamlined, one-click experience with the option to choose between multiple browsers or use the default browser.
 
 ## Features:
-- **Toolbar Integration**: The app resides in the macOS status bar, offering easy access to a specific website with a customizable icon.
+- **Toolbar Integration**: The app resides in the macOS status bar, offering easy access to a specific website with an icon.
 - **Multiple Browser Support**: Users can select from Safari, Chrome, Firefox, or the default browser to open the website.
 - **Simple Interaction**:
   - **Left Click**: Opens the website in the selected or default browser.
-  - **Right Click**: Displays a menu allowing the user to select a browser.
+  - **Right Click**: Displays a menu allowing the user to select a browser to open the website.
 - **App Startup**: The app can be set to start automatically upon login, running quietly in the background.
 - **Quit Option**: The app includes a quit option in the context menu to close it.
 
