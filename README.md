@@ -27,6 +27,7 @@ This macOS toolbar application collection allows users to open various platforms
 
 ### 1. **Install and Launch the App**
 After downloading and installing the app, it will appear as an icon in the macOS status bar. Left-click on the icon to open the website, or right-click to select your preferred browser.
+Create AppIcon with Icon Set Creator easily https://github.com/ProjectIGIRemakeTeam/IconSetCreator
 
 ### 2. **Set the App to Start on Login**
 To make the app launch automatically at startup, follow these steps:
